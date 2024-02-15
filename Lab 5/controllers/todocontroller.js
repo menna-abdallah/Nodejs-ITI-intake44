@@ -14,24 +14,26 @@ const filterTodo = async (req, res) => {
       status = status || 'todo';
 
       // Query the database
-      let query = Todos.find({ status });
-      if (createdAt) query = query.where('createdAt').equals(new Date(createdAt));
-      if (updatedAt) query = query.where('updatedAt').equals(new Date(updatedAt));
-      if (tags) query = query.where('tags').in(tags.split(',')); // Assuming tags are comma-separated
-
-      const todos = await query.select('_id userId title status tags createdAt updatedAt')
-        .limit(parseInt(limit))
-        .skip(parseInt(skip));
-      if (!todos.length) return res.status(500).json({ wornning: 'please check your query' });
-
-      return res.status(200).json({ todos });
-    } catch (err) {
-      return res.status(400).json({ error: err.message });
+      while(limit <= 50){
+        let query = Todos.find({ status });
+        if (createdAt) query = query.where('createdAt').equals(new Date(createdAt));
+        if (updatedAt) query = query.where('updatedAt').equals(new Date(updatedAt));
+        if (tags) query = query.where('tags').in(tags.split(',')); // Assuming tags are comma-separated
+  
+        const todos = await query.select('_id userId title status tags createdAt updatedAt')
+          .limit(parseInt(limit))
+          .skip(parseInt(skip));
+        if (!todos.length) return res.status(500).json({ wornning: 'please check your query' });
+  
+        return res.status(200).json({ todos });
+      } catch (err) {
+        return res.status(400).json({ error: err.message });
+      }
+    } else {
+      const todos = await Todos.find({});
+      res.json(todos);
     }
-  } else {
-    const todos = await Todos.find({});
-    res.json(todos);
-  }
+      }
 };
 
 const createtodo = async (todo) => {
