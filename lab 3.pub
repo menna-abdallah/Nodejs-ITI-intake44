@@ -1,0 +1,119 @@
+// controllers
+/*
+const getTodoByID = (id) => {
+
+  const parsedID = parseInt(id);
+  if (Number.isNaN(parsedID) || parsedID <= 0) {
+    return;
+  }
+  const todos = TodosModel.getTodos();
+
+  const todo = todos.find((todo) => todo.id === parsedID);
+
+  if (!todo) {
+    return;
+  }
+  return todo;
+};
+*/
+// routes
+/*
+router.get('/:id', (req, res) => {
+  try {
+    const todo = todosController.getTodoByID(req.params.id);
+    res.status(200).json(todo);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
+*/
+------------------------------------------------------------------
+
+// routes
+/*
+router.post('/', (req, res, next) => {
+  const {title} = req.body
+  todosController.createTodo(title);
+  res.sendStatus(204).json([{ message: 'added successfully' }]);
+  next();
+});
+*/
+
+// controllers
+/*
+const createTodo = (title) => {
+  const todos = TodosModel.getTodos();
+  // check if ther is deleted , title is not empty
+  const id = todos.length > 0 ? todos[todos.length - 1].id + 1 : 1;
+  const newTodo = { id, title, status: 'to-do' };
+  todos.push(newTodo);
+  TodosModel.saveTodos(todos);
+};
+*/
+-------------------------------------------------------------------------
+// routes
+/*
+router.patch('/:id', (req, res, next) => {
+  const id = Number(req.params.id);
+  const { title, status } = req.body;
+
+  todosController.updateTodo(id, title.trim(), status);
+  res.sendStatus(204).json([{ message: 'updated successfully' }]);
+  next();
+});
+*/
+
+
+// controllers
+/*
+const updateTodo = (id, title, status) => {
+  const todos = TodosModel.getTodos();
+  // check if the id is a number
+  if (Number.isNaN(Number(id))) {
+    return;
+  }
+  // check if the id is exist
+  const newtodo = todos.find((todo) => todo.id == id);
+  if (!newtodo) {
+    return;
+  }
+  // vlid inputs
+  if (title) {
+    newtodo.title = title;
+  }
+  if (status) {
+    newtodo.status = status;
+  }
+  TodosModel.saveTodos(todos);
+  return;
+};
+*/
+----------------------------------------------------------------------------
+// routes 
+/*
+router.delete('/:id', (req, res, next) => {
+  const { id } = req.params;
+  const todo = todosController.deleteTodo(id);
+  if (todo) {
+    res.sendStatus(204).json([{ message: 'updated successfully' }]);
+  } else {
+    res.status(404).json({ error: 'Todo not found' });
+  }
+  next();
+});
+*/
+
+// controllers
+/*
+const deleteTodo = (id) => {
+  const todos = TodosModel.getTodos();
+  const newlist = todos.filter((entry) => entry.id !== parseInt(id)); // delete
+  if (todos.length === newlist.length) {
+    return;
+  }
+  TodosModel.saveTodos(newlist);
+  return true;
+};
+*/
+

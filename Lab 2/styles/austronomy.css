@@ -1,0 +1,14 @@
+body{
+    background-color: rgb(197, 209, 219);
+}
+h1{
+    text-align: center;
+    color: rgb(54, 62, 152);
+    font-size: 40px;
+}
+img{
+    margin-left: 25%;
+    width: 550px;
+    height: 350px;
+    border-radius: 20px;
+}

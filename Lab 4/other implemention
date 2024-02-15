@@ -1,0 +1,93 @@
+
+// ---------------- post/users ----------------------
+/*
+router.post('/', async (req, res, next) => {
+  try {
+    const user = await UsersController.createuser(req.body);
+    res.json(user);
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: error.message });
+    }
+    next(error);
+  }
+});
+------- 
+// const createuser = (input) => Users.create(input);
+*/
+
+// ------------------ get/users ----------------------
+/*
+router.get('/', async (req, res, next) => {
+  try {
+    const users = await UsersController.getAll();
+    res.json(users);
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: error.message });
+    }
+    next(error);
+  }
+});
+---------
+// const getAll = () => Users.find({});
+ */
+
+// ---------------- get/users/id --------------------- 
+
+/*
+router.get('/:id', async (req, res, next) => {
+  try {
+    const user = await UsersController.getUserById(req.params.id);
+    res.json(user);
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: error.message });
+    }
+    next(error);
+  }
+});
+----------
+// const getUserById = (id) => Users.findById(id);
+*/
+
+// ---------------------- delete/users/id ------------------ 
+/*
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const user = await UsersController.deleteUser(req.params.id);
+    res.json(user);
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: error.message });
+    }
+    next(error);
+  }
+});
+-------------
+// const deleteUser = (id) => Users.findByIdAndDelete(id);
+*/
+
+// --------------------- patch/users/id ----------------
+/*
+router.patch('/:id', async (req, res, next) => {
+  try {
+    const user = await UsersController.updateUser(req.params.id, req.body);
+    res.json(user);
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: error.message });
+    }
+    next(error);
+  }
+});
+---------------
+/*
+const updateUser = (id, input) => Users.findByIdAndUpdate(
+  id,
+  input,
+  { new: true, runValidators: true },
+);
+
+*/
+

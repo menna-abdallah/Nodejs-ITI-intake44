@@ -1,0 +1,26 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: 0px;
+    ma
+}
+body{
+    font-family: 'Roboto', sans-serif;
+    background-color: rgb(235, 231, 231);
+}
+p{
+    width: 50%;
+    margin: 20px auto;
+    text-align: center;
+    font-size: 20px;
+    color: #c8ab8d;
+
+}
+img{
+    width: 75%;
+    height: 50%;
+    margin: 20px auto;
+    display: block;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
