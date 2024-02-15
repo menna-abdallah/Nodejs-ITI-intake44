@@ -1,5 +1,6 @@
 /* eslint-disable radix */
 const Todos = require('../models/todos');
+const CustomError = require('../lib/errorClass');
 
 // ------------------------ GET --------------------------------- //
 
@@ -33,48 +34,31 @@ const filterTodo = async (req, res) => {
   }
 };
 
-// ------------------ creat ------------------------------ //
-
-const createtodo = (data)=> Todos.creat(data)
-
-// ------------------------ delete --------------------------------- //
-
-const deletetodo = async (req, res, next) => {
-  try {
-    const todo = await Todos.findByIdAndDelete(req.params.id);
-    res.status(201).json({
-      message: 'User deleted successfully',
-      todo,
+const createtodo = async (todo) => {
+  const newTodo = await Todos.create(todo)
+    .catch((err) => {
+      throw new CustomError(err.message, 422);
     });
-  } catch (err) {
-    if (err.name === 'ValidationError') {
-      return res.status(400).json({ error: err.message });
-    }
-    next(err);
-  }
+  return newTodo;
 };
 
-// ------------------------ update --------------------------------- //
-
-const updatetodo = async (req, res, next) => {
-  try {
-    const todo = await Todos.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true },
-    );
-    res.status(200).json({
-      message: 'User updated successfully',
-      todo,
-    });
-  } catch (err) {
-    if (err.name === 'ValidationError') {
-      return res.status(400).json({ error: err.message });
-    }
-    next(err);
-  }
+const deletetodo = async (id) => {
+  const todo = await Todos.findByIdAndDelete(id).catch((err) => {
+    throw new CustomError(err.message, 422);
+  });
+  return todo;
 };
 
+const updatetodo = async (id, body, userID) => {
+  const todo = await Todos.findOneAndUpdate(
+    { _id: id, userId: userID },
+    body,
+    { new: true },
+  ).catch((err) => {
+    throw new CustomError(err.message, 422);
+  });
+  return todo;
+};
 // ------------------------ findbyUserId --------------------------------- //
 
 const findbyUserId = async (req, res, next) => {
