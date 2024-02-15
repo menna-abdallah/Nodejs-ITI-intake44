@@ -6,7 +6,6 @@ const auth = require('../middlewares/auth');
 
 const router = express.Router();
 
-
 router.post('/', async (req, res, next) => {
   const [err, user] = await asyncWrapper(UsersController.createuser(req.body));
   if (!err) {
@@ -24,15 +23,13 @@ router.post('/login', async (req, res, next) => {
   return next(err);
 });
 
-router.get('/', async (req, res, next) => {
+router.get('/',auth, async (req, res, next) => {
   const [err, users] = await asyncWrapper(UsersController.getAll());
   if (!err) {
     res.status(200).json(users);
   }
   return next(err);
 });
-
-router.use(auth);
 
 router.delete('/:id', async (req, res, next) => {
   try {
@@ -52,7 +49,8 @@ router.delete('/:id', async (req, res, next) => {
   }
 });
 
-router.patch('/:id', async (req, res, next) => {
+
+router.patch('/:id',auth, async (req, res, next) => {
   try {
     if (req.user._id.toString() !== req.params.id) {
       return res.status(403).json({ error: 'You are not authorized to update this user' });
@@ -74,6 +72,5 @@ router.patch('/:id', async (req, res, next) => {
 
 router.get('/:id/todos', TodosController.findbyUserId);
 
-// ------------------------- Export -----------------
 
 module.exports = router;
