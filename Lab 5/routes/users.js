@@ -1,12 +1,11 @@
 const express = require('express');
 const UsersController = require('../controllers/usercontroller');
-// const TodosController = require('../controllers/todocontroller');
+const TodosController = require('../controllers/todocontroller');
 const asyncWrapper = require('../lib/async-wrapper');
 const auth = require('../middlewares/auth');
 
 const router = express.Router();
 
-// ------------------------- POST /users -----------------
 
 router.post('/', async (req, res, next) => {
   const [err, user] = await asyncWrapper(UsersController.createuser(req.body));
@@ -16,8 +15,6 @@ router.post('/', async (req, res, next) => {
   return next(err);
 });
 
-// ------------- login ----------------------
-
 router.post('/login', async (req, res, next) => {
   const { body: { email, password } } = req;
   const [err, result] = await asyncWrapper(UsersController.login({ email, password }));
@@ -26,8 +23,6 @@ router.post('/login', async (req, res, next) => {
   }
   return next(err);
 });
-
-// ------------------------- GET /users -----------------
 
 router.get('/', async (req, res, next) => {
   const [err, users] = await asyncWrapper(UsersController.getAll());
@@ -39,24 +34,46 @@ router.get('/', async (req, res, next) => {
 
 router.use(auth);
 
-// ------------------------- DELETE /users/:id -----------------
-router.delete('/:id', UsersController.deleteUser);
+router.delete('/:id', async (req, res, next) => {
+  try {
+    if (req.user._id.toString() !== req.params.id) {
+      return res.status(403).json({ error: 'You are not authorized to delete this user' });
+    }
 
-/*
-// ------------------------- GET /users/:id -----------------
+    const [err, deletedUser] = await asyncWrapper(UsersController.deleteUser(req.params.id));
 
-router.get('/:id', UsersController.getUserById);
+    if (!err) {
+      return res.status(200).json(deletedUser);
+    }
+    return next(err);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
+router.patch('/:id', async (req, res, next) => {
+  try {
+    if (req.user._id.toString() !== req.params.id) {
+      return res.status(403).json({ error: 'You are not authorized to update this user' });
+    }
 
+    const [err, updatedUser] = 
+    await asyncWrapper(UsersController.updateUser(req.params.id, req.body));
 
-// ------------------------- Patch/users/:id -----------------
+    if (!err) {
+      return res.status(200).json(updatedUser);
+    }
+    return next(err);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
-router.patch('/:id', UsersController.updateUser);
-
-// ------------------------- GET /users/:userId/todos'-----------------
 
 router.get('/:id/todos', TodosController.findbyUserId);
 
 // ------------------------- Export -----------------
-*/
+
 module.exports = router;
