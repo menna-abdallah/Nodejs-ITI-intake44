@@ -33,7 +33,7 @@ router.get('/',auth, async (req, res, next) => {
 
 router.delete('/:id', async (req, res, next) => {
   try {
-    if (req.user._id.toString() !== req.params.id) {
+    if (req.user._id.toString() !== req.params.id || req.user.role !== 'admin') {
       return res.status(403).json({ error: 'You are not authorized to delete this user' });
     }
 
@@ -52,7 +52,7 @@ router.delete('/:id', async (req, res, next) => {
 
 router.patch('/:id',auth, async (req, res, next) => {
   try {
-    if (req.user._id.toString() !== req.params.id) {
+    if (req.user._id.toString() !== req.params.id || req.user.role !== 'admin') {
       return res.status(403).json({ error: 'You are not authorized to update this user' });
     }
 
